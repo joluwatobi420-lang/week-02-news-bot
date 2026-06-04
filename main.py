@@ -4,16 +4,15 @@ from news_fetcher import fetch_top_tech_news
 from ai_styler import generate_ai_brief
 from telegram_sender import send_telegram_message 
 
-# Clear old environmental flags to break local Windows cache issues
-os.environ.pop("GROQ_API_KEY", None)
-os.environ.pop("TELEGRAM_TOKEN", None)
-os.environ.pop("TELEGRAM_CHAT_ID", None)
-
-# Force absolute path discovery for the configuration file
+# 1. Load local .env configuration securely if it exists
 base_dir = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(base_dir, '.env')
-load_dotenv(dotenv_path=env_path, override=True)
-
+if os.path.exists(env_path):
+    load_dotenv(dotenv_path=env_path, override=True)
+else:
+    # If no .env file exists, look natively at the system context (Githun Actions)
+    load_dotenv()
+       
 def main():
     print("==STARTING DAILY BRIEFING PIPELINE ===")
 
