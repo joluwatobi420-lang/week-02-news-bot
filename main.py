@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from news_fetcher import fetch_top_tech_news
+from news_fetcher import fetch_general_news
 from ai_styler import generate_ai_brief
 from telegram_sender import send_telegram_message 
 
@@ -12,7 +12,7 @@ if os.path.exists(env_path):
 else:
     # If no .env file exists, look natively at the system context (Githun Actions)
     load_dotenv()
-       
+
 def main():
     print("==STARTING DAILY BRIEFING PIPELINE ===")
 

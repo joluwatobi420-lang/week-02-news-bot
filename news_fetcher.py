@@ -1,40 +1,37 @@
 import json
 import subprocess
 
-def fetch_top_tech_news():
-    print("Pulling latest tech briefs via System Bridge..." )
-    feed_url = "https://api.rss2json.com/v1/api.json?rss_url=https://techcrunch.com/feed/"
+def fetch_general_news(api_key):
+    """
+    Fetches the top global headlines across all categories using NewsAPI.
+    """
+    print("Pulling latest global headlines via NewsAPI...")
 
-    cmd = ["curl", "-s", feed_url]
-   
+    # 1. Hit the NewsAPI endpoint
+    url = f"https://newsapi.org/v2/top-headlines?language=en&apiKey={api_key}"
+
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True,check=True)
+        response = requests.get(url)
+        response.raise_status()      # Check for HTTP errors
+        data = response.json()
 
-        if not result.stdout.strip():
-            print("Scraper Bridge Error: Recieved empty textresponse from network.")
-            return[]
+        # 2. Extract the articles array
+        articles = data.get("articles", [])
 
-        data = json.loads(result.stdout)
-
-        if data.get("status") == "ok":
-            articles = data.get("items", [][:3]) # Grab the top 3 items
-            news_list = []
-
-            for index, item in enumerate(articles, 1):
+        # 3. Format them preciselyinto standard structured dictionaries for main.py
+        news_list = []
+        for index, art in enumerate(articles[:10], 1):  # Grab top 10 items
+            if art.get("title"):
                 clean_story = {
                     "number": index,
-                    "title": item.get("title"),
-                    "link": item.get("link")
+                    "title": art.get("title"),
+                    "link": art.get("url", "No link available")
                 }
                 news_list.append(clean_story)
-            return news_list
-        else:
-            print("Scraper Bridge Error: API response status wasn't 'ok'.")
-            return []
 
-    except json.JSONDecodeError:
-        print("Scraper Bridge Error: Could not parse response. Network might be unstable or blocked.")
-        return[]
+        return news_list
+
     except Exception as e:
-        print(f"Scraper Bridge Error: {e}")
-        return []   
+        print(f"News Fetcher Error: {e}")
+        return []            
+   
