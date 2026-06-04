@@ -15,7 +15,7 @@ def generate_ai_brief(raw_stories, groq_api_key):
     }
     
     payload = {
-        "model": "llama3-8b-8192",
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {
                 "role": "system",
