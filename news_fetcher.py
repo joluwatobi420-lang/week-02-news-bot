@@ -1,37 +1,48 @@
-import json
-import subprocess
+import xml.etree.ElementTree as ET
+import requests
 
-def fetch_general_news(api_key):
+def fetch_general_news():
     """
-    Fetches the top global headlines across all categories using NewsAPI.
+    Fetches top headlines across International, Tech, and Nigerian sources.
+     using free public RSS feeds.
     """
-    print("Pulling latest global headlines via NewsAPI...")
+    # Defien your source mix map
+    feeds = {
+        "International (BBC)": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "Tech (TechCrunch)": "https://techcrunch.com/feeds/",
+        "Nigerian/African (Premium Times)": "https://www.premiumtimesng.com/feed",
+    }
 
-    # 1. Hit the NewsAPI endpoint
-    url = f"https://newsapi.org/v2/top-headlines?language=en&apiKey={api_key}"
+    combined news = []
+    global_counter = 1
 
-    try:
-        response = requests.get(url)
-        response.raise_status()      # Check for HTTP errors
-        data = response.json()
+    for source_name, url in feeds.items():
+        print(f"Pulling from {source_name}...")
+        try:
+            response = requests.het(url, timeout=10, headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            })
+            responses.raise_for_status()
 
-        # 2. Extract the articles array
-        articles = data.get("articles", [])
+            root = ET.fromstring(response.content)
+            items = root.findall(".//item")
 
-        # 3. Format them preciselyinto standard structured dictionaries for main.py
-        news_list = []
-        for index, art in enumerate(articles[:10], 1):  # Grab top 10 items
-            if art.get("title"):
-                clean_story = {
-                    "number": index,
-                    "title": art.get("title"),
-                    "link": art.get("url", "No link available")
-                }
-                news_list.append(clean_story)
+            # Grab the top 3 frehest stories per source to keep the bundle tight
+            for item in items[:3]:
+                title = item.find("title")
+                link = item.find("link")
 
-        return news_list
+                if title is not None:
+                    clean_story = {
+                        "number": global_counter,
+                        "source": source_name,
+                        "title": f"[{source_name}] {title.text.strip()}",
+                        "link": link.text.strip() if link is not None else "No link",
+                    }
+                    combined_news.append(clean_story)
+                    global_counter +=1
 
-    except Exception as e:
-        print(f"News Fetcher Error: {e}")
-        return []            
-   
+        except Exception as e:
+            print(f"Failed to pull from {source_name}: {e}")
+
+    return combined_news                   
