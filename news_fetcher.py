@@ -13,16 +13,16 @@ def fetch_general_news():
         "Nigerian/African (Premium Times)": "https://www.premiumtimesng.com/feed",
     }
 
-    combined news = []
+    combined_news = []
     global_counter = 1
 
     for source_name, url in feeds.items():
         print(f"Pulling from {source_name}...")
         try:
-            response = requests.het(url, timeout=10, headers={
+            response = requests.get(url, timeout=10, headers={
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
             })
-            responses.raise_for_status()
+            response.raise_for_status()
 
             root = ET.fromstring(response.content)
             items = root.findall(".//item")
