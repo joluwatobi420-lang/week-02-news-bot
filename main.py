@@ -27,7 +27,7 @@ def main():
         return
 
     # 2. Run scraping engine
-    raw_stories = fetch_top_tech_news()
+    raw_stories = fetch_general_news(groq_key)
     if not raw_stories:
         print("Pipeline stopped: Could not crape new items.")
         return
