@@ -11,7 +11,7 @@ def generate_ai_brief(raw_stories, groq_api_key):
     
     # 1. Format the raw incoming articles into a text block for the prompt
     article_text = ""
-    for a in raw_stories:
+    for story in raw_stories:
         article_text += f"Title: {story.get('title')}\nLink: {story.get('link')}\n\n"
 
     # 2. Setup the target endpoint URL and headers

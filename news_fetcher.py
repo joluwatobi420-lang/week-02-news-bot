@@ -9,7 +9,7 @@ def fetch_general_news():
     # Defien your source mix map
     feeds = {
         "International (BBC)": "http://feeds.bbci.co.uk/news/world/rss.xml",
-        "Tech (TechCrunch)": "https://techcrunch.com/feeds/",
+        "Tech (TechCrunch)": "https://techcrunch.com/feed/",
         "Nigerian/African (Premium Times)": "https://www.premiumtimesng.com/feed",
     }
 
