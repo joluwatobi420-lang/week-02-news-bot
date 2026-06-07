@@ -1,13 +1,11 @@
 import requests
 
-def send_telegram_message(brief_text, bot_token, chat_id):
-    if not brief_text or not bot_token or not chat_id:
-        return False
-
-    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+def send_telegram_message(ai_brief, telegram_token, chat_id):
+    url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
+    
     payload = {
         "chat_id": chat_id,
-        "text": message,
+        "text": ai_brief,
         "parse_mode": "HTML"
     }
 
